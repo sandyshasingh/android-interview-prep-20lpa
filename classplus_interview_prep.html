@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classplus Android Interview Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #22222e;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --accent4: #f7971e;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --highlight: #1e1e2e;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image: 
+      linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index:0;
+  }
+
+  .container { max-width:1100px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+  /* HEADER */
+  header {
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .header-top { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
+  .badge {
+    background: linear-gradient(135deg, var(--accent), #9b59b6);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-cp {
+    background: transparent;
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 15px; margin-top: 8px; }
+
+  /* PROGRESS BAR */
+  .progress-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .progress-label { font-family:'Syne',sans-serif; font-weight:700; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; white-space:nowrap; }
+  .progress-bar-wrap { flex:1; min-width:200px; height:8px; background:var(--border); border-radius:100px; overflow:hidden; }
+  .progress-bar-fill { height:100%; background:linear-gradient(90deg, var(--accent), var(--accent3)); border-radius:100px; transition:width 0.5s ease; }
+  .progress-count { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); white-space:nowrap; }
+  .reset-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; padding:6px 14px; border-radius:8px; cursor:pointer; font-family:'Instrument Sans',sans-serif; transition:all 0.2s; }
+  .reset-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+
+  /* WEEK TABS */
+  .week-tabs { display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap; }
+  .tab-btn {
+    font-family:'Syne',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* WEEK PANEL */
+  .week-panel { display:none; }
+  .week-panel.active { display:block; }
+
+  /* SECTION */
+  .section { margin-bottom: 32px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .section-title { font-family:'Syne',sans-serif; font-weight:700; font-size:17px; }
+  .section-meta { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-left:auto; }
+
+  /* TOPIC CARDS GRID */
+  .topics-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px; }
+
+  /* TOPIC CARD */
+  .topic-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .topic-card::before {
+    content:'';
+    position:absolute; left:0; top:0; bottom:0;
+    width:3px;
+    background: var(--card-accent, var(--accent));
+    border-radius:2px 0 0 2px;
+    opacity:0;
+    transition:opacity 0.2s;
+  }
+  .topic-card:hover { border-color:var(--card-accent, var(--accent)); transform:translateY(-1px); }
+  .topic-card:hover::before { opacity:1; }
+  .topic-card.done { background: #0d1a14; border-color: #1a3028; }
+  .topic-card.done::before { opacity:1; background:var(--accent3); }
+
+  .card-top { display:flex; align-items:flex-start; gap:10px; }
+  .checkbox {
+    width:20px; height:20px;
+    border:2px solid var(--border);
+    border-radius:6px;
+    flex-shrink:0;
+    margin-top:2px;
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.2s;
+    font-size:12px;
+  }
+  .topic-card.done .checkbox { background:var(--accent3); border-color:var(--accent3); color:#0a0a0f; font-weight:700; }
+
+  .card-content { flex:1; }
+  .card-title { font-weight:600; font-size:14px; line-height:1.4; margin-bottom:4px; }
+  .topic-card.done .card-title { color:var(--muted); text-decoration:line-through; text-decoration-color:var(--accent3); }
+  .card-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+  .tag {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    padding:2px 8px;
+    border-radius:100px;
+    background: rgba(108,99,255,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(108,99,255,0.2);
+  }
+  .tag.hard { background:rgba(255,101,132,0.1); color:var(--accent2); border-color:rgba(255,101,132,0.2); }
+  .tag.medium { background:rgba(247,151,30,0.1); color:var(--accent4); border-color:rgba(247,151,30,0.2); }
+  .tag.easy { background:rgba(67,233,123,0.1); color:var(--accent3); border-color:rgba(67,233,123,0.2); }
+
+  /* QUESTION BLOCK */
+  .q-block {
+    background:var(--highlight);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-top:10px;
+    display:none;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+  .q-block.open { display:block; }
+  .q-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+  .q-list { list-style:none; }
+  .q-list li { font-size:13px; color:#c8c8d8; line-height:1.6; padding:4px 0; border-bottom:1px solid var(--border); }
+  .q-list li:last-child { border-bottom:none; }
+  .q-list li::before { content:'→ '; color:var(--accent); font-family:'JetBrains Mono',monospace; }
+  .expand-btn {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    background:none;
+    border:none;
+    cursor:pointer;
+    margin-top:8px;
+    padding:0;
+    transition:color 0.2s;
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  .expand-btn:hover { color:var(--accent); }
+  .expand-icon { transition:transform 0.2s; display:inline-block; }
+  .expand-btn.open .expand-icon { transform:rotate(90deg); }
+
+  /* TIP CARD */
+  .tip-card {
+    background:linear-gradient(135deg, rgba(108,99,255,0.08), rgba(255,101,132,0.04));
+    border:1px solid rgba(108,99,255,0.2);
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:24px;
+  }
+  .tip-title { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; color:var(--accent); margin-bottom:6px; }
+  .tip-text { font-size:13px; color:#b0b0c8; line-height:1.6; }
+
+  /* DSA TRACK */
+  .dsa-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:10px; }
+  .dsa-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    transition:all 0.2s;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .dsa-card:hover { border-color:var(--accent4); }
+  .dsa-card.done { background:#1a1400; border-color:#332800; }
+  .dsa-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); width:24px; flex-shrink:0; }
+  .dsa-title { font-size:13px; flex:1; }
+  .dsa-card.done .dsa-title { color:var(--muted); text-decoration:line-through; }
+  .dsa-diff { font-size:10px; font-family:'JetBrains Mono',monospace; padding:2px 8px; border-radius:100px; }
+
+  /* INTERVIEW QA */
+  .qa-item {
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:10px;
+    background:var(--card);
+  }
+  .qa-question {
+    padding:14px 18px;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:background 0.2s;
+    gap:12px;
+  }
+  .qa-question:hover { background:var(--highlight); }
+  .qa-question .arrow { color:var(--accent); font-size:12px; transition:transform 0.25s; flex-shrink:0; }
+  .qa-question.open .arrow { transform:rotate(90deg); }
+  .qa-answer {
+    padding:0 18px;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.35s ease, padding 0.2s;
+    font-size:13px;
+    color:#b8b8cc;
+    line-height:1.75;
+  }
+  .qa-answer.open { max-height:600px; padding:0 18px 16px; }
+  .qa-answer code {
+    font-family:'JetBrains Mono',monospace;
+    background:var(--highlight);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:2px 8px;
+    font-size:12px;
+    color:var(--accent3);
+  }
+  .qa-answer pre {
+    font-family:'JetBrains Mono',monospace;
+    background:var(--highlight);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:12px;
+    color:#d4d4e8;
+    overflow-x:auto;
+    margin-top:10px;
+    line-height:1.6;
+  }
+
+  /* STATS BAR */
+  .stats-bar { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:32px; }
+  .stat-box {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 20px;
+    flex:1;
+    min-width:120px;
+    text-align:center;
+  }
+  .stat-num { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; line-height:1; }
+  .stat-lbl { font-size:11px; color:var(--muted); margin-top:4px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.06em; }
+
+  @media(max-width:600px) {
+    .topics-grid { grid-template-columns:1fr; }
+    .dsa-grid { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header>
+    <div class="header-top">
+      <span class="badge">Android · 4 YOE</span>
+      <span class="badge badge-cp">Classplus Interview Prep</span>
+    </div>
+    <h1>Your 2-Week <span>Interview Playbook</span></h1>
+    <p class="subtitle">Core Android · Architecture · Compose · DSA — Check off topics as you master them.</p>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent)" id="stat-done">0</div><div class="stat-lbl">Completed</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent2)" id="stat-left">0</div><div class="stat-lbl">Remaining</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent3)" id="stat-dsa">0</div><div class="stat-lbl">DSA Solved</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent4)" id="stat-pct">0%</div><div class="stat-lbl">Overall</div></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <span class="progress-label">Overall Progress</span>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+    <span class="progress-count" id="prog-text">0 / 0</span>
+    <button class="reset-btn" onclick="resetAll()">Reset All</button>
+  </div>
+
+  <!-- TABS -->
+  <div class="week-tabs">
+    <button class="tab-btn active" onclick="switchTab('week1', this)">Week 1 — Core + DSA</button>
+    <button class="tab-btn" onclick="switchTab('week2', this)">Week 2 — Architecture + Compose</button>
+    <button class="tab-btn" onclick="switchTab('dsa', this)">DSA Problem List</button>
+    <button class="tab-btn" onclick="switchTab('qa', this)">Interview Q&amp;A Bank</button>
+  </div>
+
+  <!-- ============ WEEK 1 ============ -->
+  <div class="week-panel active" id="week1">
+
+    <div class="tip-card">
+      <div class="tip-title">💡 Week 1 Strategy</div>
+      <div class="tip-text">Focus on <strong>DSA daily (1–2 hours)</strong> since it's your weakest area. Alternate with Core Android topics. By end of Week 1 you should be comfortable with Collections, Coroutines, and all standard DS patterns (arrays, trees, graphs, DP basics).</div>
+    </div>
+
+    <!-- CORE ANDROID -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(108,99,255,0.15)">📱</div>
+        <div>
+          <div class="section-title">Core Android</div>
+          <div style="font-size:12px;color:var(--muted)">Days 1–4</div>
+        </div>
+        <div class="section-meta">HIGH PRIORITY</div>
+      </div>
+      <div class="topics-grid">
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'alife')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Activity & Fragment Lifecycle</div>
+              <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus likely</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'alife')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="alife">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>Difference between onStop() and onPause()?</li>
+                  <li>When does onSaveInstanceState get called?</li>
+                  <li>Fragment backstack behavior with add() vs replace()</li>
+                  <li>How does configuration change affect lifecycle?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'intent')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Intents, Broadcast Receivers & Services</div>
+              <div class="card-tags"><span class="tag medium">medium</span><span class="tag">common</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'intent')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="intent">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>Implicit vs Explicit intents with examples</li>
+                  <li>Foreground Service vs Background Service vs WorkManager</li>
+                  <li>How to pass data between activities safely?</li>
+                  <li>PendingIntent — when and why?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'view')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">View System & Custom Views</div>
+              <div class="card-tags"><span class="tag medium">medium</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'view')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="view">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>Measure → Layout → Draw cycle explained</li>
+                  <li>Difference between invalidate() and requestLayout()</li>
+                  <li>RecyclerView internals — ViewHolder pattern, DiffUtil</li>
+                  <li>How would you build a custom progress bar?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'perf')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Memory Management & Performance</div>
+              <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus likely</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'perf')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="perf">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>How to detect and fix memory leaks? (LeakCanary)</li>
+                  <li>WeakReference vs SoftReference use cases</li>
+                  <li>Overdraw and how to reduce it</li>
+                  <li>ANR — causes and how to debug</li>
+                  <li>Tools: Systrace, Profiler, StrictMode</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'thread')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Threading: Coroutines & Flow</div>
+              <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus likely</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'thread')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="thread">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>suspend vs regular function — how does it work internally?</li>
+                  <li>Dispatchers.IO vs Default vs Main</li>
+                  <li>StateFlow vs SharedFlow vs LiveData — when to use which?</li>
+                  <li>Structured concurrency — scope, job hierarchy</li>
+                  <li>How to handle errors in coroutines? (try/catch vs CoroutineExceptionHandler)</li>
+                  <li>Cold vs Hot flows with examples</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'storage')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Storage: Room, DataStore, SharedPrefs</div>
+              <div class="card-tags"><span class="tag medium">medium</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'storage')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="storage">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>Room migrations — how to handle schema changes?</li>
+                  <li>DataStore vs SharedPreferences — why migrate?</li>
+                  <li>Room with Flow — how does reactive DB work?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- KOTLIN -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(255,101,132,0.12)">🎯</div>
+        <div>
+          <div class="section-title">Kotlin Deep Dive</div>
+          <div style="font-size:12px;color:var(--muted)">Days 2–3</div>
+        </div>
+        <div class="section-meta">VERY HIGH PRIORITY</div>
+      </div>
+      <div class="topics-grid">
+
+        <div class="topic-card" style="--card-accent:var(--accent2)" onclick="toggleCard(this, 'kext')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Extension Functions, Lambdas, Higher-Order Functions</div>
+              <div class="card-tags"><span class="tag medium">medium</span><span class="tag">classplus likely</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'kext')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="kext">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>How does Kotlin extension function resolve at compile time?</li>
+                  <li>Difference between let, run, with, apply, also — when to use each</li>
+                  <li>Inline functions and reified type params — why needed?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent2)" onclick="toggleCard(this, 'sealed')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Sealed Classes, Data Classes, Delegation</div>
+              <div class="card-tags"><span class="tag easy">easy</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'sealed')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="sealed">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>Sealed class vs enum vs abstract class</li>
+                  <li>data class — what methods are generated?</li>
+                  <li>by lazy vs lateinit — key differences</li>
+                  <li>Delegation pattern using 'by' keyword</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent2)" onclick="toggleCard(this, 'generics')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Generics, Variance (in/out), Type Erasure</div>
+              <div class="card-tags"><span class="tag hard">hard</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'generics')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="generics">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>What is covariance vs contravariance? (out vs in)</li>
+                  <li>Why can't you use T in certain positions?</li>
+                  <li>How to work around type erasure at runtime?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent2)" onclick="toggleCard(this, 'null')">
+          <div class="card-top">
+            <div class="checkbox">✓</div>
+            <div class="card-content">
+              <div class="card-title">Null Safety, Elvis, Safe Calls</div>
+              <div class="card-tags"><span class="tag easy">easy</span></div>
+              <button class="expand-btn" onclick="toggleQ(event,'null')"><span class="expand-icon">▶</span> Show interview questions</button>
+              <div class="q-block" id="null">
+                <div class="q-label">Expected Questions</div>
+                <ul class="q-list">
+                  <li>!! operator — when is it acceptable to use it?</li>
+                  <li>How does Kotlin null safety compile to Java bytecode?</li>
+                  <li>Difference between ?.let{} and if(x != null) — practical?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WEEK 1 DSA -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(247,151,30,0.12)">🧠</div>
+        <div>
+          <div class="section-title">DSA — Week 1 Focus</div>
+          <div style="font-size:12px;color:var(--muted)">1–2 hours daily · Days 1–7</div>
+        </div>
+        <div class="section-meta">WEAKEST AREA → PRIORITIZE</div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'd1')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Arrays & Two Pointers</div>
+          <div class="card-tags"><span class="tag easy">easy</span><span class="tag">foundation</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'d1')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="d1"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Two Sum, Three Sum</li><li>Move Zeroes, Remove Duplicates</li>
+            <li>Container With Most Water</li><li>Trapping Rain Water</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'd2')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">HashMap & HashSet Patterns</div>
+          <div class="card-tags"><span class="tag easy">easy</span><span class="tag">foundation</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'d2')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="d2"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Group Anagrams</li><li>Longest Substring Without Repeating Chars</li>
+            <li>Subarray Sum Equals K</li><li>Top K Frequent Elements</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'd3')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Linked Lists</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'d3')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="d3"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Reverse Linked List (iterative + recursive)</li><li>Detect Cycle (Floyd's algorithm)</li>
+            <li>Merge Two Sorted Lists</li><li>LRU Cache implementation</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'd4')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Stacks & Queues</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'d4')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="d4"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Valid Parentheses</li><li>Min Stack</li>
+            <li>Daily Temperatures (monotonic stack)</li><li>Sliding Window Maximum</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'd5')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Binary Search</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'d5')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="d5"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Classic Binary Search</li><li>Search in Rotated Array</li>
+            <li>Find First & Last Position</li><li>Koko Eating Bananas</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'd6')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Trees — BFS & DFS</div>
+          <div class="card-tags"><span class="tag medium">medium</span><span class="tag">classplus likely</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'d6')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="d6"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Max Depth of Binary Tree</li><li>Level Order Traversal</li>
+            <li>Lowest Common Ancestor</li><li>Validate BST</li>
+          </ul></div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end week1 -->
+
+  <!-- ============ WEEK 2 ============ -->
+  <div class="week-panel" id="week2">
+
+    <div class="tip-card">
+      <div class="tip-title">💡 Week 2 Strategy</div>
+      <div class="tip-text">Architecture and Compose are the two areas where Classplus (an ed-tech platform at scale) will go deep. They have large-scale Kotlin codebases. Know MVVM + Clean Architecture cold, and be ready to write Compose code on a whiteboard or shared editor.</div>
+    </div>
+
+    <!-- ARCHITECTURE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(67,233,123,0.12)">🏗</div>
+        <div>
+          <div class="section-title">Architecture Patterns</div>
+          <div style="font-size:12px;color:var(--muted)">Days 8–10</div>
+        </div>
+        <div class="section-meta">VERY HIGH PRIORITY</div>
+      </div>
+      <div class="topics-grid">
+
+        <div class="topic-card" style="--card-accent:var(--accent3)" onclick="toggleCard(this, 'mvvm')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">MVVM — ViewModel, LiveData, StateFlow</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus must</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'mvvm')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="mvvm"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>Why does ViewModel survive configuration changes?</li>
+            <li>How do you expose UI state — single UiState object vs multiple flows?</li>
+            <li>When would you NOT use ViewModel?</li>
+            <li>Difference between ViewModel scope vs viewLifecycleOwner scope</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent3)" onclick="toggleCard(this, 'clean')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Clean Architecture — Layers & Dependency Rule</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus must</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'clean')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="clean"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>Explain the 3 layers — presentation, domain, data — and their responsibilities</li>
+            <li>Why does the domain layer have no Android dependencies?</li>
+            <li>UseCase pattern — is it always necessary?</li>
+            <li>How do you structure modules in a multi-module Android project?</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent3)" onclick="toggleCard(this, 'hilt')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Dependency Injection — Hilt & Dagger 2</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus likely</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'hilt')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="hilt"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>How does Hilt simplify Dagger? What does @HiltAndroidApp do?</li>
+            <li>Scopes: @Singleton vs @ActivityScoped vs @ViewModelScoped</li>
+            <li>How to inject into a ViewModel? (HiltViewModel)</li>
+            <li>How would you test a class that uses Hilt?</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent3)" onclick="toggleCard(this, 'repo')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Repository Pattern & Offline-First</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'repo')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="repo"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>How do you implement a network-first vs cache-first strategy?</li>
+            <li>How do you handle partial failures (network OK, DB write fails)?</li>
+            <li>How would you architect offline course playback at Classplus scale?</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent3)" onclick="toggleCard(this, 'nav')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Navigation Component & Multi-Module Nav</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'nav')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="nav"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>NavGraph, NavController, NavHost — how they wire together</li>
+            <li>Passing data safely — Safe Args vs bundle</li>
+            <li>Deep links with Navigation component</li>
+            <li>Navigation in a multi-module project — nested nav graphs</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent3)" onclick="toggleCard(this, 'test')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Testing — Unit, Integration, UI</div>
+          <div class="card-tags"><span class="tag medium">medium</span><span class="tag">classplus likely</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'test')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="test"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>How do you unit test a ViewModel with coroutines? (TestCoroutineDispatcher)</li>
+            <li>Mockito vs MockK — why MockK for Kotlin?</li>
+            <li>What do you test in a Repository?</li>
+            <li>Espresso for UI — what are its limitations?</li>
+          </ul></div></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COMPOSE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(108,99,255,0.15)">✨</div>
+        <div>
+          <div class="section-title">Jetpack Compose</div>
+          <div style="font-size:12px;color:var(--muted)">Days 10–13</div>
+        </div>
+        <div class="section-meta">HIGH PRIORITY</div>
+      </div>
+      <div class="topics-grid">
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'comp1')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Recomposition & State Management</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus must</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'comp1')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="comp1"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>How does Compose decide what to recompose?</li>
+            <li>remember vs rememberSaveable — key difference</li>
+            <li>State hoisting — why and when?</li>
+            <li>How to avoid unnecessary recompositions? (stable, @Immutable, keys)</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'comp2')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Side Effects — LaunchedEffect, SideEffect, DisposableEffect</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus likely</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'comp2')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="comp2"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>When do you use LaunchedEffect vs rememberCoroutineScope?</li>
+            <li>What is DisposableEffect used for? Give a real example.</li>
+            <li>SideEffect vs LaunchedEffect — critical difference?</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'comp3')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Custom Layouts & Modifiers</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'comp3')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="comp3"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>How to create a custom layout in Compose? (Layout composable)</li>
+            <li>Modifier ordering matters — explain with an example</li>
+            <li>How to create a custom Modifier?</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'comp4')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Compose + ViewModel + Flow Integration</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus must</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'comp4')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="comp4"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>collectAsStateWithLifecycle vs collectAsState — why prefer the former?</li>
+            <li>How do you handle one-time events (navigation, snackbar) from ViewModel in Compose?</li>
+            <li>UiState sealed class pattern — show me an implementation</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'comp5')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Performance: Derivation, Keys, Stable Classes</div>
+          <div class="card-tags"><span class="tag hard">hard</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'comp5')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="comp5"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>How does Compose compiler optimize stable types?</li>
+            <li>derivedStateOf — what problem does it solve?</li>
+            <li>key() in LazyColumn — why is it crucial for performance?</li>
+          </ul></div></div></div>
+        </div>
+
+        <div class="topic-card" style="--card-accent:var(--accent)" onclick="toggleCard(this, 'comp6')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Interop: Compose in XML & XML in Compose</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'comp6')"><span class="expand-icon">▶</span> Show interview questions</button>
+          <div class="q-block" id="comp6"><div class="q-label">Expected Questions</div><ul class="q-list">
+            <li>ComposeView vs AbstractComposeView in existing XML layouts</li>
+            <li>AndroidView — embedding a View inside Compose</li>
+            <li>Migration strategy from XML to Compose in large apps</li>
+          </ul></div></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WEEK 2 DSA -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(247,151,30,0.12)">🧠</div>
+        <div>
+          <div class="section-title">DSA — Week 2 (Advanced)</div>
+          <div style="font-size:12px;color:var(--muted)">Continue 1 hour daily</div>
+        </div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'da1')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Dynamic Programming Basics</div>
+          <div class="card-tags"><span class="tag hard">hard</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'da1')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="da1"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Climbing Stairs, House Robber</li><li>Longest Common Subsequence</li>
+            <li>0/1 Knapsack</li><li>Coin Change</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'da2')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Graphs — BFS, DFS, Cycle Detection</div>
+          <div class="card-tags"><span class="tag hard">hard</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'da2')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="da2"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Number of Islands</li><li>Clone Graph</li>
+            <li>Course Schedule (topological sort)</li><li>Dijkstra's Algorithm</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'da3')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Sliding Window & Prefix Sum</div>
+          <div class="card-tags"><span class="tag medium">medium</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'da3')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="da3"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Max Sum Subarray of Size K</li><li>Longest Substring with K Distinct</li>
+            <li>Minimum Window Substring</li><li>Product of Array Except Self</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent4)" onclick="toggleCard(this, 'da4')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Recursion & Backtracking</div>
+          <div class="card-tags"><span class="tag hard">hard</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'da4')"><span class="expand-icon">▶</span> Problems to solve</button>
+          <div class="q-block" id="da4"><div class="q-label">Practice Problems</div><ul class="q-list">
+            <li>Subsets, Permutations</li><li>N-Queens</li>
+            <li>Word Search</li><li>Combination Sum</li>
+          </ul></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINAL DAY -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(255,101,132,0.12)">🎯</div>
+        <div><div class="section-title">Day 14 — Mock & System Design</div></div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" style="--card-accent:var(--accent2)" onclick="toggleCard(this, 'sys1')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">System Design: Video Streaming App (Classplus-relevant)</div>
+          <div class="card-tags"><span class="tag hard">hard</span><span class="tag">classplus must</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'sys1')"><span class="expand-icon">▶</span> Key design areas</button>
+          <div class="q-block" id="sys1"><div class="q-label">Design Considerations</div><ul class="q-list">
+            <li>Offline video download — architecture and storage strategy</li>
+            <li>Adaptive bitrate streaming — ExoPlayer integration</li>
+            <li>Progress sync across devices</li>
+            <li>DRM content protection</li>
+            <li>Background download with WorkManager</li>
+          </ul></div></div></div>
+        </div>
+        <div class="topic-card" style="--card-accent:var(--accent2)" onclick="toggleCard(this, 'sys2')">
+          <div class="card-top"><div class="checkbox">✓</div>
+          <div class="card-content"><div class="card-title">Behavioral Questions — STAR Method</div>
+          <div class="card-tags"><span class="tag easy">easy</span></div>
+          <button class="expand-btn" onclick="toggleQ(event,'sys2')"><span class="expand-icon">▶</span> Expected questions</button>
+          <div class="q-block" id="sys2"><div class="q-label">Prepare These Stories</div><ul class="q-list">
+            <li>Tell me about a performance issue you solved</li>
+            <li>How did you handle a major architecture decision in your team?</li>
+            <li>Describe a time you disagreed with a technical decision</li>
+            <li>How do you approach code reviews?</li>
+            <li>Why Classplus? (Research their product — ed-tech, teacher platform)</li>
+          </ul></div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end week2 -->
+
+  <!-- ============ DSA LIST ============ -->
+  <div class="week-panel" id="dsa">
+    <div class="tip-card">
+      <div class="tip-title">🧠 DSA Game Plan</div>
+      <div class="tip-text">Aim for <strong>2 problems per day</strong>. For each problem: understand the brute force → optimize → code from scratch → explain complexity aloud. Classplus typically asks <strong>Medium-level LeetCode</strong> in 30–45 minutes. Focus on <strong>arrays, strings, trees, DP</strong>.</div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(247,151,30,0.12)">📋</div>
+        <div><div class="section-title">30 Must-Solve Problems</div></div>
+        <div class="section-meta" id="dsa-counter">0 / 30 solved</div>
+      </div>
+      <div class="dsa-grid" id="dsa-grid">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ QA BANK ============ -->
+  <div class="week-panel" id="qa">
+    <div class="tip-card">
+      <div class="tip-title">💬 Interview Q&A Bank</div>
+      <div class="tip-text">These are the most commonly asked deep-dive questions for <strong>senior Android engineers</strong> at product companies like Classplus. Click any question to reveal a structured answer.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(108,99,255,0.15)">⚡</div>
+        <div><div class="section-title">Kotlin & Coroutines</div></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          Explain how Kotlin coroutines work internally — what is a Continuation?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          A coroutine is implemented via <strong>Continuation Passing Style (CPS)</strong> transformation by the Kotlin compiler. When you mark a function as <code>suspend</code>, the compiler rewrites it into a state machine. The function receives an implicit <code>Continuation&lt;T&gt;</code> parameter which is essentially a callback.<br><br>
+          Each suspension point becomes a state in that state machine. When the coroutine suspends (e.g., waiting for a network response), it saves its local variables and current state index into the Continuation object and returns — freeing the thread. When the result is ready, the Continuation is resumed, the state machine jumps back to the correct state, and execution continues.<br><br>
+          This is why coroutines are lightweight — they don't block threads; they save state on the heap and yield the thread back to the pool.
+          <pre>// Simplified compiler output concept:
+fun fetchData(continuation: Continuation): Any {
+    when (continuation.state) {
+        0 -> { /* initial state */ continuation.state = 1; return SUSPEND }
+        1 -> { /* resumed after suspend */ return result }
+    }
+}</pre>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          StateFlow vs SharedFlow — when would you use each?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          <strong>StateFlow</strong> is a hot flow that always holds a current value (like LiveData). It requires an initial value, replays the latest emission to new collectors, and only emits when the value actually changes (uses equals()). Use it for <strong>UI state</strong> — e.g., a loading/success/error state object.<br><br>
+          <strong>SharedFlow</strong> is more flexible — no initial value required, configurable replay cache (0 to N), and emits every value regardless of equality. Use it for <strong>one-time events</strong> like navigation triggers, snackbar messages, or analytics events.<br><br>
+          <strong>Rule of thumb:</strong> StateFlow for state, SharedFlow for events.
+          <pre>// ViewModel
+val uiState: StateFlow&lt;HomeState&gt; = _uiState.asStateFlow()  // state
+val events: SharedFlow&lt;UiEvent&gt; = _events.asSharedFlow()   // events</pre>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          What is structured concurrency and why does it matter?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          Structured concurrency means coroutines have a defined <strong>lifetime tied to a scope</strong>. When a scope is cancelled (e.g., ViewModel is cleared → viewModelScope is cancelled), all coroutines launched within it are automatically cancelled too. This prevents coroutine leaks.<br><br>
+          Key rules: a parent coroutine waits for all its children to complete. If a child fails with an exception, the parent and all siblings are cancelled (unless using <code>SupervisorJob</code>). With <code>SupervisorJob</code>, child failures are isolated — other children continue.<br><br>
+          This is why you should always use <code>viewModelScope</code> or <code>lifecycleScope</code> instead of <code>GlobalScope</code> — GlobalScope has no structure and creates coroutine leaks.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(67,233,123,0.12)">🏗</div>
+        <div><div class="section-title">Architecture</div></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          How does ViewModel survive configuration changes?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          ViewModel is stored in a <strong>ViewModelStore</strong>, which is retained by the system across configuration changes (like screen rotation). When an Activity is recreated, the new instance receives the same ViewModelStore from the <code>ViewModelStoreOwner</code>, and thus gets the same ViewModel instance back.<br><br>
+          The Activity's <code>NonConfigurationInstance</code> mechanism holds the ViewModelStore alive during the recreation. Only when the Activity is truly finishing (user presses back, or <code>isFinishing</code> returns true) is the ViewModelStore cleared and <code>ViewModel.onCleared()</code> called.<br><br>
+          This means you should never hold references to Context, Views, or Activity in a ViewModel — they'll be destroyed and recreated, but the ViewModel lives on, causing leaks.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          How would you architect an offline-first feature for Classplus (e.g., downloading course videos)?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          <strong>Layers involved:</strong><br><br>
+          <strong>1. Download Management:</strong> Use <code>WorkManager</code> with a <code>DownloadWorker</code> that handles chunked downloads. WorkManager ensures the download survives process death and respects system constraints (network available, battery not low).<br><br>
+          <strong>2. Storage:</strong> Save video files to app-specific external storage (<code>getExternalFilesDir()</code>). Track download state and file path in Room DB.<br><br>
+          <strong>3. Repository layer:</strong> Before fetching from network, always check Room for cached content. Emit Room data first (cache), then fetch network and update Room, which automatically emits via Flow to the UI.<br><br>
+          <strong>4. Playback:</strong> Use ExoPlayer with a custom <code>DataSource.Factory</code> — serve local file if downloaded, otherwise stream with adaptive bitrate.<br><br>
+          <strong>5. DRM:</strong> Use ExoPlayer's <code>DefaultDrmSessionManager</code> with Widevine for protected content.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          What is dependency inversion and how does DI support it?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          Dependency Inversion Principle (the D in SOLID) states: high-level modules should not depend on low-level modules — both should depend on abstractions (interfaces).<br><br>
+          In Android: instead of your ViewModel directly instantiating a <code>UserRepository</code> class, it depends on a <code>IUserRepository</code> interface. The concrete implementation is injected at runtime via Hilt/Dagger.<br><br>
+          Benefits: your ViewModel is testable without a real network or database — you inject a <code>FakeUserRepository</code> in tests. You can swap implementations (e.g., mock vs real) without changing the ViewModel.<br><br>
+          Hilt achieves this via compile-time code generation — it creates a dependency graph at build time, so there's no runtime reflection overhead (unlike older approaches).
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(108,99,255,0.15)">✨</div>
+        <div><div class="section-title">Jetpack Compose</div></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          How does Compose decide what to recompose, and how do you optimize it?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          Compose uses <strong>smart recomposition</strong> — it only recomposes composables whose inputs (state reads) have changed. The Compose compiler inserts tracking calls around state reads. When a <code>State&lt;T&gt;</code> changes, only the composables that read that specific state are scheduled for recomposition.<br><br>
+          <strong>Optimization techniques:</strong><br>
+          1. <strong>Stable types:</strong> Mark data classes with <code>@Stable</code> or <code>@Immutable</code> to tell the compiler parameters won't change unexpectedly — enabling skippability.<br>
+          2. <strong>derivedStateOf:</strong> Wraps a computation that derives from other state, so it only recomputes when its inputs change.<br>
+          3. <strong>key():</strong> In LazyColumn, use stable unique keys so Compose can reuse composables instead of re-creating them on list updates.<br>
+          4. <strong>Avoid reading state high in the tree</strong> — push state reads down to the leaf composables that actually need them, limiting recomposition scope.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question" onclick="toggleQA(this)">
+          LaunchedEffect vs rememberCoroutineScope — when to use which?
+          <span class="arrow">▶</span>
+        </div>
+        <div class="qa-answer">
+          <strong>LaunchedEffect(key)</strong>: Launches a coroutine tied to the composable's lifecycle. It starts when the composable enters composition and is cancelled when it leaves. Re-launches when the key changes. Use it for work that should run automatically in response to a state change — e.g., fetching data when a userId changes, playing an animation on appearance.<br><br>
+          <strong>rememberCoroutineScope()</strong>: Returns a CoroutineScope tied to the composable's lifecycle, but you launch coroutines manually from event handlers. Use it when you need to trigger a coroutine from a user interaction — e.g., inside an <code>onClick</code> lambda.<br><br>
+          <strong>Key rule:</strong> Automated side effects → LaunchedEffect. User-triggered coroutines → rememberCoroutineScope.
+          <pre>// LaunchedEffect — auto-triggered
+LaunchedEffect(userId) { viewModel.load(userId) }
+
+// rememberCoroutineScope — user-triggered  
+val scope = rememberCoroutineScope()
+Button(onClick = { scope.launch { doSomething() } }) { ... }</pre>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end qa -->
+
+</div><!-- container -->
+
+<script>
+// ===== DSA PROBLEMS DATA =====
+const dsaProblems = [
+  { id:'p1', title:'Two Sum', diff:'Easy', topic:'Array' },
+  { id:'p2', title:'Best Time to Buy & Sell Stock', diff:'Easy', topic:'Array' },
+  { id:'p3', title:'Contains Duplicate', diff:'Easy', topic:'HashSet' },
+  { id:'p4', title:'Valid Anagram', diff:'Easy', topic:'HashMap' },
+  { id:'p5', title:'Valid Parentheses', diff:'Easy', topic:'Stack' },
+  { id:'p6', title:'Reverse Linked List', diff:'Easy', topic:'LinkedList' },
+  { id:'p7', title:'Merge Two Sorted Lists', diff:'Easy', topic:'LinkedList' },
+  { id:'p8', title:'Climbing Stairs', diff:'Easy', topic:'DP' },
+  { id:'p9', title:'Maximum Depth of Binary Tree', diff:'Easy', topic:'Tree' },
+  { id:'p10', title:'Invert Binary Tree', diff:'Easy', topic:'Tree' },
+  { id:'p11', title:'3Sum', diff:'Medium', topic:'Array' },
+  { id:'p12', title:'Group Anagrams', diff:'Medium', topic:'HashMap' },
+  { id:'p13', title:'Longest Substring Without Repeating Chars', diff:'Medium', topic:'Sliding Window' },
+  { id:'p14', title:'Container With Most Water', diff:'Medium', topic:'Two Pointers' },
+  { id:'p15', title:'Search in Rotated Sorted Array', diff:'Medium', topic:'Binary Search' },
+  { id:'p16', title:'LRU Cache', diff:'Medium', topic:'Design' },
+  { id:'p17', title:'Subarray Sum Equals K', diff:'Medium', topic:'Prefix Sum' },
+  { id:'p18', title:'Level Order Traversal', diff:'Medium', topic:'Tree BFS' },
+  { id:'p19', title:'Lowest Common Ancestor of BST', diff:'Medium', topic:'Tree' },
+  { id:'p20', title:'Number of Islands', diff:'Medium', topic:'Graph DFS' },
+  { id:'p21', title:'Course Schedule', diff:'Medium', topic:'Topological Sort' },
+  { id:'p22', title:'Coin Change', diff:'Medium', topic:'DP' },
+  { id:'p23', title:'Longest Common Subsequence', diff:'Medium', topic:'DP' },
+  { id:'p24', title:'Product of Array Except Self', diff:'Medium', topic:'Array' },
+  { id:'p25', title:'Minimum Window Substring', diff:'Hard', topic:'Sliding Window' },
+  { id:'p26', title:'Trapping Rain Water', diff:'Hard', topic:'Two Pointers' },
+  { id:'p27', title:'Daily Temperatures', diff:'Medium', topic:'Monotonic Stack' },
+  { id:'p28', title:'Word Search', diff:'Medium', topic:'Backtracking' },
+  { id:'p29', title:'Validate Binary Search Tree', diff:'Medium', topic:'Tree' },
+  { id:'p30', title:'Sliding Window Maximum', diff:'Hard', topic:'Deque' },
+];
+
+function renderDSA() {
+  const grid = document.getElementById('dsa-grid');
+  grid.innerHTML = '';
+  const saved = JSON.parse(localStorage.getItem('dsa_done') || '[]');
+  dsaProblems.forEach((p, i) => {
+    const done = saved.includes(p.id);
+    const diffClass = p.diff === 'Easy' ? 'easy' : p.diff === 'Medium' ? 'medium' : 'hard';
+    const diffColor = p.diff === 'Easy' ? '#43e97b' : p.diff === 'Medium' ? '#f7971e' : '#ff6584';
+    const diffBg = p.diff === 'Easy' ? 'rgba(67,233,123,0.1)' : p.diff === 'Medium' ? 'rgba(247,151,30,0.1)' : 'rgba(255,101,132,0.1)';
+    grid.innerHTML += `
+      <div class="dsa-card ${done?'done':''}" onclick="toggleDSA('${p.id}', this)">
+        <span class="dsa-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="dsa-title">${p.title}<br><span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">${p.topic}</span></span>
+        <span class="dsa-diff" style="color:${diffColor};background:${diffBg};border:1px solid ${diffColor}40">${p.diff}</span>
+      </div>`;
+  });
+  updateDSACounter();
+}
+
+function toggleDSA(id, el) {
+  let saved = JSON.parse(localStorage.getItem('dsa_done') || '[]');
+  if (saved.includes(id)) { saved = saved.filter(x => x !== id); el.classList.remove('done'); }
+  else { saved.push(id); el.classList.add('done'); }
+  localStorage.setItem('dsa_done', JSON.stringify(saved));
+  updateDSACounter();
+  updateStats();
+}
+
+function updateDSACounter() {
+  const saved = JSON.parse(localStorage.getItem('dsa_done') || '[]');
+  const c = document.getElementById('dsa-counter');
+  if (c) c.textContent = `${saved.length} / 30 solved`;
+  document.getElementById('stat-dsa').textContent = saved.length;
+}
+
+// ===== TOPIC CARDS =====
+function toggleCard(el, id) {
+  if (event.target.tagName === 'BUTTON' || event.target.closest('button')) return;
+  el.classList.toggle('done');
+  saveTopics();
+  updateStats();
+}
+
+function toggleQ(e, id) {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  const block = document.getElementById(id);
+  block.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function saveTopics() {
+  const done = [...document.querySelectorAll('.topic-card.done')].map(el => {
+    return el.querySelector('.card-title')?.textContent?.trim();
+  });
+  localStorage.setItem('topics_done', JSON.stringify(done));
+}
+
+function loadTopics() {
+  const done = JSON.parse(localStorage.getItem('topics_done') || '[]');
+  document.querySelectorAll('.topic-card').forEach(card => {
+    const title = card.querySelector('.card-title')?.textContent?.trim();
+    if (done.includes(title)) card.classList.add('done');
+  });
+}
+
+// ===== QA ACCORDION =====
+function toggleQA(el) {
+  const answer = el.nextElementSibling;
+  el.classList.toggle('open');
+  answer.classList.toggle('open');
+}
+
+// ===== STATS =====
+function updateStats() {
+  const total = document.querySelectorAll('.topic-card').length;
+  const done = document.querySelectorAll('.topic-card.done').length;
+  const dsaDone = JSON.parse(localStorage.getItem('dsa_done') || '[]').length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-left').textContent = total - done;
+  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `${done} / ${total} topics`;
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(id, btn) {
+  document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'dsa') renderDSA();
+  updateStats();
+}
+
+function resetAll() {
+  if (!confirm('Reset all progress?')) return;
+  localStorage.removeItem('topics_done');
+  localStorage.removeItem('dsa_done');
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('done'));
+  renderDSA();
+  updateStats();
+}
+
+// ===== INIT =====
+window.onload = () => {
+  loadTopics();
+  updateStats();
+  updateDSACounter();
+};
+</script>
+</body>
+</html>
